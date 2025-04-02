@@ -215,9 +215,10 @@ jobs:
       - name: Run make check on Linux (trap failure)
         if: ${{ matrix.os == 'linux' }}
         run: |
-          set +e
           ulimit -c unlimited
-          make -j${{ steps.cores.outputs.cores }} check ${{ matrix.make_flags }} VERBOSE=1
+          bash -c '
+            make -j${{ steps.cores.outputs.cores }} check ${{ matrix.make_flags }} VERBOSE=1
+          '
           RESULT=$?
           echo "make check exit code: $RESULT"
           if [ $RESULT -ne 0 ]; then
