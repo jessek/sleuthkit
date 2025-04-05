@@ -480,7 +480,6 @@ TskAutoDb::filterVol(const TSK_VS_PART_INFO * vs_part)
 TSK_FILTER_ENUM
 TskAutoDb::filterFs(TSK_FS_INFO * fs_info)
 {
-    TSK_FS_FILE *file_root;
     m_foundStructure = true;
 
     if (m_poolFound) {
@@ -505,14 +504,15 @@ TskAutoDb::filterFs(TSK_FS_INFO * fs_info)
         }
     }
 
-
     // We won't hit the root directory on the walk, so open it now
-    if ((file_root = tsk_fs_file_open(fs_info, NULL, "/")) != NULL) {
-        processFile(file_root, "");
-        tsk_fs_file_close(file_root);
-        file_root = NULL;
-    }
+    std::unique_ptr<TSK_FS_FILE, decltype(&tsk_fs_file_close)> file_root{
+        tsk_fs_file_open(fs_info, NULL, "/"),
+        tsk_fs_file_close
+    };
 
+    if (file_root) {
+        processFile(file_root.get(), "");
+    }
 
     // make sure that flags are set to get all files -- we need this to
     // find parent directory
@@ -527,7 +527,6 @@ TskAutoDb::filterFs(TSK_FS_INFO * fs_info)
     }
 
     setFileFilterFlags(filterFlags);
-
 
     // Save the file system info for creating unallocated blocks later
     TSK_DB_FS_INFO fs_info_db;
@@ -1172,8 +1171,12 @@ TSK_RETVAL_ENUM TskAutoDb::addFsInfoUnalloc(const TSK_IMG_INFO*  curImgInfo, con
     }
 
     //open the fs we have from database
-    TSK_FS_INFO * fsInfo = tsk_fs_open_img_decrypt((TSK_IMG_INFO*)curImgInfo, dbFsInfo.imgOffset, dbFsInfo.fType, getFileSystemPassword().data());
-    if (fsInfo == NULL) {
+    std::unique_ptr<TSK_FS_INFO, decltype(&tsk_fs_close)> fsInfo{
+        tsk_fs_open_img_decrypt((TSK_IMG_INFO*)curImgInfo, dbFsInfo.imgOffset, dbFsInfo.fType, getFileSystemPassword().data()),
+        tsk_fs_close
+    };
+
+    if (!fsInfo) {
         tsk_error_set_errstr2("TskAutoDb::addFsInfoUnalloc: error opening fs at offset %" PRIdOFF, dbFsInfo.imgOffset);
         registerError();
         return TSK_ERR;
@@ -1189,12 +1192,11 @@ TSK_RETVAL_ENUM TskAutoDb::addFsInfoUnalloc(const TSK_IMG_INFO*  curImgInfo, con
     //walk unalloc blocks on the fs and process them
     //initialize the unalloc block walk tracking
     UNALLOC_BLOCK_WLK_TRACK unallocBlockWlkTrack(*this, *fsInfo, dbFsInfo.objId, m_minChunkSize, m_maxChunkSize);
-    uint8_t block_walk_ret = tsk_fs_block_walk(fsInfo, fsInfo->first_block, fsInfo->last_block, (TSK_FS_BLOCK_WALK_FLAG_ENUM)(TSK_FS_BLOCK_WALK_FLAG_UNALLOC | TSK_FS_BLOCK_WALK_FLAG_AONLY),
+    uint8_t block_walk_ret = tsk_fs_block_walk(fsInfo.get(), fsInfo->first_block, fsInfo->last_block, (TSK_FS_BLOCK_WALK_FLAG_ENUM)(TSK_FS_BLOCK_WALK_FLAG_UNALLOC | TSK_FS_BLOCK_WALK_FLAG_AONLY),
         fsWalkUnallocBlocksCb, &unallocBlockWlkTrack);
 
     if (block_walk_ret == 1) {
         stringstream errss;
-        tsk_fs_close(fsInfo);
         errss << "TskAutoDb::addFsInfoUnalloc: error walking fs unalloc blocks, fs id: ";
         errss << unallocBlockWlkTrack.fsObjId;
         tsk_error_set_errstr2("%s", errss.str().c_str());
@@ -1203,7 +1205,6 @@ TSK_RETVAL_ENUM TskAutoDb::addFsInfoUnalloc(const TSK_IMG_INFO*  curImgInfo, con
     }
 
     if (m_stopAllProcessing) {
-        tsk_fs_close(fsInfo);
         return TSK_OK;
     }
 
@@ -1216,12 +1217,8 @@ TSK_RETVAL_ENUM TskAutoDb::addFsInfoUnalloc(const TSK_IMG_INFO*  curImgInfo, con
 
     if (m_db->addUnallocBlockFile(m_curUnallocDirId, dbFsInfo.objId, unallocBlockWlkTrack.size, unallocBlockWlkTrack.ranges, fileObjId, m_curImgId) == TSK_ERR) {
         registerError();
-        tsk_fs_close(fsInfo);
         return TSK_ERR;
     }
-
-    //cleanup
-    tsk_fs_close(fsInfo);
 
     return TSK_OK;
 }
