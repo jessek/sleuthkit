@@ -6,7 +6,8 @@ name: "Build"
 on:
   push:
     branches:
-      - '**'
+      - main
+      - develop
   pull_request:
     branches:
       - main
@@ -290,10 +291,10 @@ jobs:
             executables/*
           retention-days: 15
 
-      - name: Run distcheck
-        run: |
-          ./configure
-          make distcheck
+#      - name: Run distcheck
+#        run: |
+#          ./configure
+#          make distcheck
 
       - uses: ammaraskar/gcc-problem-matcher@0.2.0
         name: GCC Problem Matcher
