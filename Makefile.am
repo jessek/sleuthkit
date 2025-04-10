@@ -618,6 +618,16 @@ tools/sorter/sorter: $(top_srcdir)/tools/sorter/sorter.base Makefile
 	@cat $(top_srcdir)/tools/sorter/sorter.base >>$@
 	@chmod +x $@
 
+test_data = \
+	test/data/image_exfat1.E01 \
+	test/data/image_ext2.dd \
+	test/data/image_ext2.xml \
+	test/data/imageformat_mmls_1.E01 \
+	test/data/imageformat_mmls_1.vhd \
+	test/data/imageformat_mmls_1.vmdk \
+
+
+
 #indent:
 #	pushd sorter ; perltidy -b sorter.base ; popd
 #	pushd timeline ; perltidy -b mactime.base ; popd
