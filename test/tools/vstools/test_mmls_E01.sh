@@ -12,8 +12,8 @@ if [ ! -d "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
     exit 77                     # autoconf 'SKIP'
 fi
 
-if [ ! "${src_dir+x}" ]; then
-    echo src_dir is not set
+if [ ! "${srcdir+x}" ]; then
+    echo srcdir is not set
     exit 77                     # autoconf 'SKIP'
 fi
 
@@ -24,15 +24,15 @@ if [ ! -e $EXFAT1 ]; then
     exit 77
 fi
 
-if [ ! -e ${src_dir}/test/tools/vstools/mmls_output/2 ]; then
-    echo ${src_dir}/test/tools/vstools/mmls_output/2 does not exit
+if [ ! -e ${srcdir}/test/tools/vstools/mmls_output/2 ]; then
+    echo ${srcdir}/test/tools/vstools/mmls_output/2 does not exit
     exit 77
 fi
-$TD 'tools/vstools/mmls$EXEEXT -r $EXFAT1' ${src_dir}/test/tools/vstools/mmls_output/2
+$TD 'tools/vstools/mmls$EXEEXT -r $EXFAT1' ${srcdir}/test/tools/vstools/mmls_output/2
 
 
-if [ ! -e ${src_dir}/test/tools/vstools/mmls_output/3 ]; then
-    echo ${src_dir}/test/tools/vstools/mmls_output/3 does not exit
+if [ ! -e ${srcdir}/test/tools/vstools/mmls_output/3 ]; then
+    echo ${srcdir}/test/tools/vstools/mmls_output/3 does not exit
     exit 77
 fi
-$TD 'tools/vstools/mmls$EXEEXT -c $EXFAT1' ${src_dir}/test/tools/vstools/mmls_output/3
+$TD 'tools/vstools/mmls$EXEEXT -c $EXFAT1' ${srcdir}/test/tools/vstools/mmls_output/3
