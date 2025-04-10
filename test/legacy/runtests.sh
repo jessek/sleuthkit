@@ -4,13 +4,21 @@
 # It curently runs fs_thread_test on a set of images, of which some are public
 #
 
-EXIT_SUCCESS=0
-EXIT_FAILURE=1
-EXIT_IGNORE=77
+EXIT_PASS=0
+EXIT_FAIL=1
+EXIT_SKIP=77
 
 NOHARDFAIL=yes
 
-if [ ! -d ${SLEUTHKIT_TEST_DATA_DIR:=../sleuthkit_test_data} ]; then echo $SLEUTHKIT_TEST_DATA_DIR does not exist ; exit 1 ; fi
+if [ ! "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
+    echo SLEUTHKIT_TEST_DATA_DIR is not set
+    exit 77                     # autoconf 'SKIP'
+fi
+
+if [ ! -d "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
+    echo $SLEUTHKIT_TEST_DATA_DIR does not exist
+    exit 77                     # autoconf 'SKIP'
+fi
 
 IMAGE_DIR=$SLEUTHKIT_TEST_DATA_DIR
 NTHREADS=1
@@ -24,22 +32,22 @@ check_diffs()
 {
     for LOG_FILE in thread-*.log ; do
         echo diff base.log ${LOG_FILE}
-        diff base.log ${LOG_FILE} || return ${EXIT_FAILURE}
+        diff base.log ${LOG_FILE} || return ${EXIT_FAIL}
     done
 
-    return ${EXIT_SUCCESS}
+    return ${EXIT_PASS}
 }
 
 if ! test -d ${IMAGE_DIR} ; then
     echo "Missing image directory: ${IMAGE_DIR}"
-    exit ${EXIT_IGNORE}
+    exit ${EXIT_SKIP}
 fi
 
 FS_THREAD_TEST="test/legacy/fs_thread_test$EXEEXT"
 
 if ! test -x ${FS_THREAD_TEST} ; then
     echo "Missing test executable: ${FS_THREAD_TEST}"
-    exit ${EXIT_IGNORE};
+    exit ${EXIT_SKIP};
 fi
 
 if test -f ${IMAGE_DIR}/ext2fs.dd ; then
@@ -50,11 +58,11 @@ if test -f ${IMAGE_DIR}/ext2fs.dd ; then
     ${WINE} ${FS_THREAD_TEST} -f ext2 ${IMAGE_DIR}/ext2fs.dd ${NTHREADS} ${NITERS}
 
     if ! check_diffs ; then
-        exit ${EXIT_FAILURE}
+        exit ${EXIT_FAIL}
     fi
 else
     echo ${IMAGE_DIR}/ext2fs.dd missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_IGNORE}
+    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
 
 if test -f ${IMAGE_DIR}/ext2fs.dd ; then
@@ -65,11 +73,11 @@ if test -f ${IMAGE_DIR}/ext2fs.dd ; then
     ${WINE} ${FS_THREAD_TEST} -f ufs ${IMAGE_DIR}/misc-ufs1.dd ${NTHREADS} ${NITERS}
 
     if ! check_diffs ; then
-        exit ${EXIT_FAILURE}
+        exit ${EXIT_FAIL}
     fi
 else
     echo ${IMAGE_DIR}/ext2fs.dd missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_IGNORE};
+    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP};
 fi
 
 
@@ -81,11 +89,11 @@ if test -f ${IMAGE_DIR}/test_hfs.dmg ; then
     ${WINE} ${FS_THREAD_TEST} -f hfs -o 64 ${IMAGE_DIR}/test_hfs.dmg ${NTHREADS} ${NITERS}
 
     if ! check_diffs ; then
-        exit ${EXIT_FAILURE}
+        exit ${EXIT_FAIL}
     fi
 else
     echo ${IMAGE_DIR}/test_hfs.dmg missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_IGNORE}
+    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
 
 if test -f ${IMAGE_DIR}/ntfs-img-kw-1.dd ; then
@@ -96,11 +104,11 @@ if test -f ${IMAGE_DIR}/ntfs-img-kw-1.dd ; then
     ${WINE} ${FS_THREAD_TEST} -f ntfs ${IMAGE_DIR}/ntfs-img-kw-1.dd ${NTHREADS} ${NITERS}
 
     if ! check_diffs ; then
-        exit ${EXIT_FAILURE}
+        exit ${EXIT_FAIL}
     fi
 else
     echo ${IMAGE_DIR}/ntfs-img-kw-1.dd missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_IGNORE}
+    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
 
 
@@ -112,12 +120,12 @@ if test -f ${IMAGE_DIR}/fat32.dd ; then
     ${WINE} ${FS_THREAD_TEST} -f fat ${IMAGE_DIR}/fat32.dd ${NTHREADS} ${NITERS}
 
     if ! check_diffs; then
-        exit ${EXIT_FAILURE}
+        exit ${EXIT_FAIL}
     fi
 else
     echo ${IMAGE_DIR}/fat32.dd missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_IGNORE}
+    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
 
 
-exit ${EXIT_SUCCESS}
+exit ${EXIT_PASS}

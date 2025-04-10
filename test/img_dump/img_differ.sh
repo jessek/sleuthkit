@@ -9,7 +9,7 @@ fi
 IMG="$1"
 EXP="$2"
 
-if [ ! -e ]; then
+if [ ! -e $IMG ]; then
    echo $IMG does not exist
    exit 77
 fi

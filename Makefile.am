@@ -624,7 +624,7 @@ test_data = \
 	test/data/image_ext2.xml \
 	test/data/imageformat_mmls_1.E01 \
 	test/data/imageformat_mmls_1.vhd \
-	test/data/imageformat_mmls_1.vmdk \
+	test/data/imageformat_mmls_1.vmdk
 
 
 

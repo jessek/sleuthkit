@@ -37,8 +37,9 @@ void check_image(std::string img_path, std::string dfxml2_path) {
 
     img_path = std::string(data_dir) + std::string("/") + img_path;
 
-    if (::stat(name.c_str(), &buffer) != 0) {
-        INFO("Cannot open file: " << name);
+    struct stat buffer;
+    if (::stat(img_path.c_str(), &buffer) != 0) {
+        INFO("Cannot open file: " << img_path);
         return ;
     }
 
