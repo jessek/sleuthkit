@@ -653,7 +653,7 @@ check_SCRIPTS = $(check_script_files)
 EXTRA_DIST += $(check_script_files)
 
 TESTS =	\
-	test/runner \
+	test/catch_runner \
 	test/test_libraries.sh \
 	test/fiwalk/fiwalk_test \
 	test/img_dump/test_imgs.sh \
@@ -683,7 +683,7 @@ LOG_COMPILER = scripts/test_runner.sh
 
 # TODO: nothing runs fs_attrlist_apis, fs_name_apis, fs_thread_test, read_apis
 check_PROGRAMS = \
-	test/runner \
+	test/catch_runner \
 	test/fiwalk/fiwalk_test \
 	test/img_dump/img_dump \
 	test/legacy/fs_attrlist_apis \
@@ -706,7 +706,7 @@ test_runner_SOURCES = \
 	test/tsk/img/test_vmdk.cpp \
 	test/tsk/util/test_crypto.cpp \
 	test/tsk/hashdb/test_binsrch_index.cpp \
-	test/runner.cpp \
+	test/catch_runner.cpp \
 	vendors/catch.hpp
 
 test_fiwalk_fiwalk_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/vendors $(CATCH2_CPPFLAGS)
