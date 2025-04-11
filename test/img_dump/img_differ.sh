@@ -7,6 +7,8 @@
 # $2 - expected output
 
 
+MYDIR=$( dirname $(realpath "$0") )
+
 if [[ -z "$2" ]]; then
     echo usage: img_differ.sh image image.json
     exit 1
@@ -16,12 +18,7 @@ if [ -n "$WINE" ]; then
   EXEEXT=.exe
 fi
 
-if [ -z ${top_builddir+x} ]; then
-    echo top_builddir not set.
-    exit 1
-fi
-
-IMG_DUMP=${top_builddir}/test/img_dump/img_dump$EXEEXT
+IMG_DUMP=$MYDIR/img_dump$EXEEXT
 
 if [ ! -e $IMG_DUMP ]; then
     echo $IMG_DUMP not found
