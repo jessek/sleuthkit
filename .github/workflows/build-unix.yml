@@ -288,8 +288,6 @@ jobs:
         if: ${{ matrix.codecov == 'yes' }}
         run: |
           make -j check V=0
-          make -j test/fiwalk/fiwalk_test V=0
-          make -j test/runner V=0
 
       - name: run gcov
         if: ${{ matrix.codecov == 'yes' }}
