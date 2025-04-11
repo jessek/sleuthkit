@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # This script is called by 'make check'
-# It curently runs fs_thread_test on a set of images, of which some are public
 #
 
 EXIT_PASS=0
@@ -15,14 +14,21 @@ if [ ! "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
     exit 77                     # autoconf 'SKIP'
 fi
 
-if [ ! -d "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
+if [ ! -d "${SLEUTHKIT_TEST_DATA_DIR}" ]; then
     echo $SLEUTHKIT_TEST_DATA_DIR does not exist
     exit 77                     # autoconf 'SKIP'
 fi
 
-IMAGE_DIR=$SLEUTHKIT_TEST_DATA_DIR
-NTHREADS=1
-NITERS=1
+if [ ! "${srcdir+x}" ]; then
+    echo srcdir is not set
+    exit 1
+fi
+
+IMAGE_EXT2=$srcdir/test/data/image_ext2.dd
+IMAGE_UFS=$srcdir/test/data/image_ufs.dd
+
+NTHREADS=4
+NITERS=2
 
 if [ -n "$WINE" ]; then
   EXEEXT=.exe
@@ -50,36 +56,21 @@ if ! test -x ${FS_THREAD_TEST} ; then
     exit ${EXIT_SKIP};
 fi
 
-if test -f ${IMAGE_DIR}/ext2fs.dd ; then
-    echo testing ${IMAGE_DIR}/ext2fs.dd
+if test -f $IMAGE_EXT2 ; then
     rm -f base.log thread-*.log
-    ${WINE} ${FS_THREAD_TEST} -f ext2 ${IMAGE_DIR}/ext2fs.dd 1 1
+    echo collecting $IMAGE_EXT2 output with 1 thread 1 iteration.
+    ${WINE} ${FS_THREAD_TEST} -f ext2 $IMAGE_EXT2 1 1
     mv thread-0.log base.log
-    ${WINE} ${FS_THREAD_TEST} -f ext2 ${IMAGE_DIR}/ext2fs.dd ${NTHREADS} ${NITERS}
+    echo testing $IMAGE_EXT2. threads=$NTHREADS iterations=$NITERS
+    ${WINE} ${FS_THREAD_TEST} -f ext2 $IMAGE_EXT2 ${NTHREADS} ${NITERS}
 
     if ! check_diffs ; then
         exit ${EXIT_FAIL}
     fi
 else
-    echo ${IMAGE_DIR}/ext2fs.dd missing
+    echo $IMAGE_EXT2 missing
     [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
-
-if test -f ${IMAGE_DIR}/ext2fs.dd ; then
-    echo testing ${IMAGE_DIR}/ext2fs.dd
-    rm -f base.log thread-*.log
-    ${WINE} ${FS_THREAD_TEST} -f ufs ${IMAGE_DIR}/misc-ufs1.dd 1 1
-    mv thread-0.log base.log
-    ${WINE} ${FS_THREAD_TEST} -f ufs ${IMAGE_DIR}/misc-ufs1.dd ${NTHREADS} ${NITERS}
-
-    if ! check_diffs ; then
-        exit ${EXIT_FAIL}
-    fi
-else
-    echo ${IMAGE_DIR}/ext2fs.dd missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP};
-fi
-
 
 if test -f ${IMAGE_DIR}/test_hfs.dmg ; then
     echo testing ${IMAGE_DIR}/test_hfs.dmg
