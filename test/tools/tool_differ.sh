@@ -1,12 +1,10 @@
 #!/bin/bash -e
 
-if [ ! "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
-    echo SLEUTHKIT_TEST_DATA_DIR is not set
-    exit 77                     # autoconf 'SKIP'
-if [ ! -d ${SLEUTHKIT_TEST_DATA_DIR} ]; then
-    echo  $SLEUTHKIT_TEST_DATA_DIR does not exist
-    exit 77
-fi
+# Tools differ program:
+# $1 = full command to run, with
+#    - $EXEEXT being replaced with .exe on windows
+#    - $DATA_DIR being replaced with ${srcdir}/test/data
+#    - $SLEUTHKIT_TEST_DATA_DIR being replaced with $SLEUTHKIT_TEST_DATA_DIR
 
 # get basedir for normalizing output
 basedir=$(realpath "$(dirname $0)/../..")
@@ -15,15 +13,18 @@ if [ -n "$WINE" ]; then
   EXEEXT=.exe
 fi
 
+DATA_DIR=$srcdir/test/data
+
 CMD="${1/\$EXEEXT/$EXEEXT}"
-CMD="${CMD/\$DATA_DIR/$SLEUTHKIT_TEST_DATA_DIR}"
-EXP="$2"
+CMD="${CMD/\$DATA_DIR/$DATA_DIR}"
+CMD="${CMD/\$SLEUTHKIT_TEST_DATA_DIR/$SLEUTHKIT_TEST_DATA_DIR}"
+EXPECTED="$2"
 
 echo -n "checking '$CMD': "
 
 DIFF_EXIT=0
 # diff, normalizing against basedir
-RESULT=$(diff --strip-trailing-cr -u "$EXP" <($WINE $CMD 2>&1 | sed -e "\|^${basedir}/.*: |d")) || DIFF_EXIT=$?
+RESULT=$(diff --strip-trailing-cr -u "$EXPECTED" <($WINE $CMD 2>&1 | sed -e "\|^${basedir}/.*: |d")) || DIFF_EXIT=$?
 if [ $DIFF_EXIT -ne 0 ]; then
   echo failed
   echo "$RESULT"

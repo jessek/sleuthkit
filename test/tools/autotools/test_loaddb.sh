@@ -3,6 +3,7 @@
 if [ ! "${SLEUTHKIT_TEST_DATA_DIR+x}" ]; then
     echo SLEUTHKIT_TEST_DATA_DIR is not set
     exit 77                     # autoconf 'SKIP'
+fi
 if [ ! -d ${SLEUTHKIT_TEST_DATA_DIR} ]; then
     echo  $SLEUTHKIT_TEST_DATA_DIR does not exist
     exit 77

@@ -691,9 +691,10 @@ check_PROGRAMS = \
 	test/legacy/fs_thread_test \
 	test/legacy/read_apis
 
-test_runner_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/vendors $(CATCH2_CPPFLAGS)
-test_runner_LDADD = $(TSK_LIBS)
-test_runner_SOURCES = \
+test_catch_runner_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/vendors $(CATCH2_CPPFLAGS)
+test_catch_runner_LDADD = $(TSK_LIBS)
+test_catch_runner_SOURCES = \
+	test/tsk/img/test_img.h \
 	test/tsk/base/test_tsk_error.cpp \
 	test/tsk/img/test_aff4.cpp \
 	test/tsk/img/test_ewf.cpp \

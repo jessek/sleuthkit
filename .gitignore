@@ -209,3 +209,5 @@ TAGS
 test/from_brian/
 *.log
 apfs_pool.db
+test/catch_runner
+*.db
