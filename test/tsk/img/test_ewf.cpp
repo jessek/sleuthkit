@@ -31,7 +31,7 @@ TEST_CASE("ewf_open not a file") {
 }
 
 TEST_CASE("ewf_open not an E01") {
-    std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("test/data/image/image.dd"));
+    std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.dd"));
     const TSK_TCHAR* images[] = { path.c_str() };
     std::unique_ptr<TSK_IMG_INFO, decltype(&tsk_img_close)> img{
     ewf_open(1, images, 1234),
@@ -41,7 +41,7 @@ TEST_CASE("ewf_open not an E01") {
 }
 
 TEST_CASE("ewf_open ok") {
-    std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("test/data/image/image.E01"));
+    std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.E01"));
     const TSK_TCHAR* images[] = { path.c_str() };
     std::unique_ptr<TSK_IMG_INFO, decltype(&tsk_img_close)> img{
     ewf_open(1, images, 1234),
@@ -73,10 +73,10 @@ void check_glob_E01( const TSK_TCHAR* path, bool ok, const std::vector<TSK_TSTRI
 
 TEST_CASE("glob_E01") {
   const std::tuple<const TSK_TCHAR*, bool, std::vector<const TSK_TCHAR*>> tcase[] = {
-    { _TSK_T("test/data/image/image.E01"), true, { _TSK_T("test/data/image/image.E01") } },
-    { _TSK_T("test/data/image/not_a_file.E01"), true, {} },
-    { _TSK_T("test/data/image/not_a_file"), false, {} },
-    { _TSK_T("test/data/bogus.E01"), true, { _TSK_T("test/data/bogus.E01"), _TSK_T("test/data/bogus.E02") } }
+    { _TSK_T("image/image.E01"), true, { _TSK_T("image/image.E01") } },
+    { _TSK_T("image/not_a_file.E01"), true, {} },
+    { _TSK_T("image/not_a_file"), false, {} },
+    { _TSK_T("bogus.E01"), true, { _TSK_T("bogus.E01"), _TSK_T("bogus.E02") } }
   };
 
   for (const auto& [rel_path, ok, rel_exp_vec] : tcase) {

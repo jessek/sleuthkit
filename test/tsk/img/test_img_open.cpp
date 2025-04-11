@@ -69,7 +69,7 @@ TEST_CASE("tsk_img_open_utf8 null images") {
 }
 
 TEST_CASE("tsk_img_open sector size") {
-  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("test/data/image/image.dd"));
+  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.dd"));
   const TSK_TCHAR* const images[] = { path.c_str() };
 
   const std::pair<unsigned int, bool> tcase[] = {
@@ -182,40 +182,40 @@ TEST_CASE("tsk_img_open") {
 
   const Case raw_cases[] = {
 #ifdef HAVE_LIBEWF
-    { _TSK_T("test/data/image/image.E01"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_EWF_EWF },
-    { _TSK_T("test/data/image/image.E01"), TSK_IMG_TYPE_EWF_EWF, true, TSK_IMG_TYPE_EWF_EWF },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_EWF_EWF, false, TSK_ERR_IMG_MAGIC },
+    { _TSK_T("image/image.E01"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_EWF_EWF },
+    { _TSK_T("image/image.E01"), TSK_IMG_TYPE_EWF_EWF, true, TSK_IMG_TYPE_EWF_EWF },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_EWF_EWF, false, TSK_ERR_IMG_MAGIC },
 #else
-    { _TSK_T("test/data/image/image.E01"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.E01"), TSK_IMG_TYPE_EWF_EWF, false, TSK_ERR_IMG_UNSUPTYPE },
+    { _TSK_T("image/image.E01"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.E01"), TSK_IMG_TYPE_EWF_EWF, false, TSK_ERR_IMG_UNSUPTYPE },
 #endif
 #ifdef HAVE_LIBQCOW
-    { _TSK_T("test/data/image/image.qcow"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_QCOW_QCOW },
-    { _TSK_T("test/data/image/image.qcow"), TSK_IMG_TYPE_QCOW_QCOW, true, TSK_IMG_TYPE_QCOW_QCOW },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_QCOW_QCOW, false, TSK_ERR_IMG_OPEN },
+    { _TSK_T("image/image.qcow"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_QCOW_QCOW },
+    { _TSK_T("image/image.qcow"), TSK_IMG_TYPE_QCOW_QCOW, true, TSK_IMG_TYPE_QCOW_QCOW },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_QCOW_QCOW, false, TSK_ERR_IMG_OPEN },
 #else
-    { _TSK_T("test/data/image/image.qcow"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.qcow"), TSK_IMG_TYPE_QCOW_QCOW, false, TSK_ERR_IMG_UNSUPTYPE },
+    { _TSK_T("image/image.qcow"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.qcow"), TSK_IMG_TYPE_QCOW_QCOW, false, TSK_ERR_IMG_UNSUPTYPE },
 #endif
 #ifdef HAVE_LIBVHDI
-    { _TSK_T("test/data/image/image.vhd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_VHD_VHD },
-    { _TSK_T("test/data/image/image.vhd"), TSK_IMG_TYPE_VHD_VHD, true, TSK_IMG_TYPE_VHD_VHD },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_VHD_VHD, false, TSK_ERR_IMG_OPEN },
+    { _TSK_T("image/image.vhd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_VHD_VHD },
+    { _TSK_T("image/image.vhd"), TSK_IMG_TYPE_VHD_VHD, true, TSK_IMG_TYPE_VHD_VHD },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_VHD_VHD, false, TSK_ERR_IMG_OPEN },
 #else
-    { _TSK_T("test/data/image/image.vhd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.vhd"), TSK_IMG_TYPE_VHD_VHD, false, TSK_ERR_IMG_UNSUPTYPE },
+    { _TSK_T("image/image.vhd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.vhd"), TSK_IMG_TYPE_VHD_VHD, false, TSK_ERR_IMG_UNSUPTYPE },
 #endif
 #ifdef HAVE_LIBVMDK
-    { _TSK_T("test/data/image/image.vmdk"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_VMDK_VMDK },
-    { _TSK_T("test/data/image/image.vmdk"), TSK_IMG_TYPE_VMDK_VMDK, true, TSK_IMG_TYPE_VMDK_VMDK },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_VMDK_VMDK, false, TSK_ERR_IMG_OPEN },
+    { _TSK_T("image/image.vmdk"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_VMDK_VMDK },
+    { _TSK_T("image/image.vmdk"), TSK_IMG_TYPE_VMDK_VMDK, true, TSK_IMG_TYPE_VMDK_VMDK },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_VMDK_VMDK, false, TSK_ERR_IMG_OPEN },
 #else
-    { _TSK_T("test/data/image/image.vmdk"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.vmdk"), TSK_IMG_TYPE_VMDK_VMDK, false, TSK_ERR_IMG_UNSUPTYPE },
+    { _TSK_T("image/image.vmdk"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.vmdk"), TSK_IMG_TYPE_VMDK_VMDK, false, TSK_ERR_IMG_UNSUPTYPE },
 #endif
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_RAW, true, TSK_IMG_TYPE_RAW },
-    { _TSK_T("test/data/image/image.dd"), TSK_IMG_TYPE_UNSUPP, false, TSK_ERR_IMG_UNSUPTYPE }
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_DETECT, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_RAW, true, TSK_IMG_TYPE_RAW },
+    { _TSK_T("image/image.dd"), TSK_IMG_TYPE_UNSUPP, false, TSK_ERR_IMG_UNSUPTYPE }
   };
 
   for (const auto& [rel_path, type, ok, exp_type_or_err] : raw_cases) {
