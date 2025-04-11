@@ -46,6 +46,7 @@ NITERS=2
 
 check_diffs()
 {
+    cat base.log
     for LOG_FILE in thread-*.log ; do
         echo diff base.log ${LOG_FILE}
         diff base.log ${LOG_FILE} || return ${EXIT_FAIL}
