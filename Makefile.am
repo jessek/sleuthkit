@@ -618,6 +618,8 @@ tools/sorter/sorter: $(top_srcdir)/tools/sorter/sorter.base Makefile
 	@cat $(top_srcdir)/tools/sorter/sorter.base >>$@
 	@chmod +x $@
 
+## Check system
+## check system test data that's not in SLEUTHKIT_TEST_DATA_DIR
 test_data = \
 	test/data/a_file.0 \
 	test/data/a_file.1/dummy \
@@ -648,15 +650,6 @@ test_data = \
 	test/data/imageformat_mmls_1.vmdk \
 	test/data/README.md
 
-
-
-#indent:
-#	pushd sorter ; perltidy -b sorter.base ; popd
-#	pushd timeline ; perltidy -b mactime.base ; popd
-
-EXTRA_DIST += test/legacy/run_fs_thread_test.sh
-
-## Check system
 check_script_files = \
 	test/check_static.sh \
 	test/fiwalk/image_dd.xml \
@@ -683,8 +676,12 @@ check_script_files = \
 	test/tools/vstools/test_mmls_E01.sh
 
 
-check_SCRIPTS = $(check_script_files)
-EXTRA_DIST += $(check_script_files)
+check_SCRIPTS =$(check_script_files)
+EXTRA_DIST +=  $(test_data) $(check_script_files)
+
+#indent:
+#	pushd sorter ; perltidy -b sorter.base ; popd
+#	pushd timeline ; perltidy -b mactime.base ; popd
 
 TESTS =	\
 	test/catch_runner \
@@ -713,7 +710,8 @@ if USE_WINE
 TESTS_ENVIRONMENT = WINE=wine
 endif
 
-LOG_COMPILER = scripts/test_runner.sh
+#SLG - removed LOG_COMPILER here. It's still used in
+#LOG_COMPILER = scripts/test_runner.sh
 
 # TODO: nothing runs fs_attrlist_apis, fs_name_apis, fs_thread_test, read_apis
 check_PROGRAMS = \
