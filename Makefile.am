@@ -659,17 +659,29 @@ EXTRA_DIST += test/legacy/run_fs_thread_test.sh
 ## Check system
 check_script_files = \
 	test/check_static.sh \
-	test/test_libraries.sh \
-	test/test_static_tools.sh \
+	test/fiwalk/image_dd.xml \
+	test/fiwalk/README.md \
 	test/img_dump/img_differ.sh \
 	test/img_dump/test_imgs.sh \
 	test/img_dump/test_imgs_E01.sh \
 	test/legacy/run_fs_thread_test.sh \
-	test/tools/tool_differ.sh \
+	test/README.md \
+	test/test_libraries.sh \
+	test/test_static_tools.sh \
+	test/tools/autotools \
 	test/tools/autotools/test_loaddb.sh \
+	test/tools/fstools/fls_output \
+	test/tools/fstools/fls_output/1 \
+	test/tools/fstools/fls_output/2 \
 	test/tools/fstools/test_fls.sh \
+	test/tools/tool_differ.sh \
+	test/tools/vstools/mmls_output \
+	test/tools/vstools/mmls_output/1 \
+	test/tools/vstools/mmls_output/2 \
+	test/tools/vstools/mmls_output/3 \
 	test/tools/vstools/test_mmls.sh \
 	test/tools/vstools/test_mmls_E01.sh
+
 
 check_SCRIPTS = $(check_script_files)
 EXTRA_DIST += $(check_script_files)
