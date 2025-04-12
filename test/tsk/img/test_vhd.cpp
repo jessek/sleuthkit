@@ -33,7 +33,7 @@ TEST_CASE("vhdi_open 2 images") {
 }
 
 TEST_CASE("vhdi_open not a VHD") {
-  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image.dd"));
+  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.dd"));
   const TSK_TCHAR* const images[] = { path.c_str() };
 
   std::unique_ptr<TSK_IMG_INFO, decltype(&tsk_img_close)> img{
@@ -44,7 +44,7 @@ TEST_CASE("vhdi_open not a VHD") {
 }
 
 TEST_CASE("vhdi_open ok") {
-  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image.vhd"));
+  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.vhd"));
   const TSK_TCHAR* const images[] = { path.c_str() };
 
   std::unique_ptr<TSK_IMG_INFO, decltype(&tsk_img_close)> img{
@@ -56,7 +56,7 @@ TEST_CASE("vhdi_open ok") {
 
 #ifdef TSK_WIN32
 TEST_CASE("vhdi_open backslash path separator ok") {
-  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image.vhd"));
+  std::basic_string<TSK_TCHAR> path = prepend_test_data_dir(_TSK_T("image/image.vhd"));
   fix_slashes_for_windows(path);
   const TSK_TCHAR* const images[] = { path.c_str() };
 
