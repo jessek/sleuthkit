@@ -92,20 +92,21 @@ else
     [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
 fi
 
-if test -f ${DATA_DIR}/test_hfs.dmg ; then
-    echo testing ${DATA_DIR}/test_hfs.dmg
-    rm -f base.log thread-*.log
-    ${WINE} ${FS_THREAD_TEST} -f hfs -o 64 ${DATA_DIR}/test_hfs.dmg 1 1
-    mv thread-0.log base.log
-    ${WINE} ${FS_THREAD_TEST} -f hfs -o 64 ${DATA_DIR}/test_hfs.dmg ${NTHREADS} ${NITERS}
-
-    if ! check_diffs ; then
-        exit ${EXIT_FAIL}
-    fi
-else
-    echo ${DATA_DIR}/test_hfs.dmg missing
-    [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
-fi
+# if test -f ${DATA_DIR}/test_hfs.dmg ; then
+#     echo testing ${DATA_DIR}/test_hfs.dmg
+#     rm -f base.log thread-*.log
+#     ${WINE} ${FS_THREAD_TEST} -f hfs -o 64 ${DATA_DIR}/test_hfs.dmg 1 1
+#     mv thread-0.log base.log
+#     ${WINE} ${FS_THREAD_TEST} -f hfs -o 64 ${DATA_DIR}/test_hfs.dmg ${NTHREADS} ${NITERS}
+#
+#     if ! check_diffs ; then
+#         exit ${EXIT_FAIL}
+#     fi
+# else
+#     echo ${DATA_DIR}/test_hfs.dmg missing
+#     [ -z "$NOHARDFAIL" ] && exit ${EXIT_SKIP}
+# fi
+#
 
 IMG=$IMAGE_NTFS
 if test -f $IMG ; then

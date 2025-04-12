@@ -676,7 +676,17 @@ check_script_files = \
 	test/tools/vstools/test_mmls_E01.sh
 
 
-check_SCRIPTS =$(check_script_files)
+# tests are listed in check_SCRIPTS if they
+# - are only needed for testing
+# - must be installed in the build tree
+# - must be made executable
+check_SCRIPTS = \
+	test/img_dump/img_differ.sh \
+	test/tools/tool_differ.sh \
+	test/tools/vstools/test_mmls.sh \
+	test/tools/vstools/test_mmls_E01.sh
+
+
 EXTRA_DIST +=  $(test_data) $(check_script_files)
 
 #indent:
