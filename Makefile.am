@@ -682,7 +682,13 @@ check_script_files = \
 # - must be made executable
 check_SCRIPTS = \
 	test/img_dump/img_differ.sh \
+	test/test_libraries.sh \
+	test/img_dump/test_imgs.sh \
+	test/legacy/run_fs_thread_test.sh \
+	test/tools/autotools/test_loaddb.sh \
+	test/tools/fstools/test_fls.sh \
 	test/tools/tool_differ.sh \
+	test/tools/vstools/test_mmls.sh
 	test/tools/vstools/test_mmls.sh \
 	test/tools/vstools/test_mmls_E01.sh
 
