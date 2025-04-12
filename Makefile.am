@@ -619,12 +619,34 @@ tools/sorter/sorter: $(top_srcdir)/tools/sorter/sorter.base Makefile
 	@chmod +x $@
 
 test_data = \
+	test/data/a_file.0 \
+	test/data/a_file.1/dummy \
+	test/data/bogus.E01 \
+	test/data/bogus.E02 \
+	test/data/image \
 	test/data/image_exfat1.E01 \
 	test/data/image_ext2.dd \
 	test/data/image_ext2.xml \
+	test/data/image/image.dd \
+	test/data/image/image.dd.json \
+	test/data/image/image.E01 \
+	test/data/image/image.E01.json \
+	test/data/image/image.iso \
+	test/data/image/image.iso.json \
+	test/data/image/image.qcow \
+	test/data/image/image.qcow.json \
+	test/data/image/image.vhd \
+	test/data/image/image.vhd.json \
+	test/data/image/image.vmdk \
+	test/data/image/image.vmdk.json \
+	test/data/image/README.md \
+	test/data/imageformat_mmls_0.E01 \
+	test/data/imageformat_mmls_0.vhd \
+	test/data/imageformat_mmls_0.vmdk \
 	test/data/imageformat_mmls_1.E01 \
 	test/data/imageformat_mmls_1.vhd \
-	test/data/imageformat_mmls_1.vmdk
+	test/data/imageformat_mmls_1.vmdk \
+	test/data/README.md
 
 
 
