@@ -833,14 +833,14 @@ endif # End of X_JNI check
 
 clean-tsk_jar:
 if ANT_DETECTED
-	cd bindings/java ; $(ANT) clean
+	cd $(top_srcdir)/bindings/java ; $(ANT) clean
 else
 	echo ANT not detected. bindings/java will not be cleaned
 endif
 
 clean-tsk_caseuco_jar:
 if ANT_DETECTED
-	cd case-uco/java ; $(ANT) clean
+	cd $(top_srcdir)/case-uco/java ; $(ANT) clean
 else
 	echo ANT not detected. case-uco/java will not be cleaned
 endif
