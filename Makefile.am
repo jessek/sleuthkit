@@ -35,25 +35,6 @@ EXTRA_DIST = \
 	NEWS.txt \
 	README_win32.txt \
 	README.md \
-	bindings/java/README.txt \
-	bindings/java/*.xml \
-	bindings/java/doxygen/Doxyfile \
-	bindings/java/doxygen/*.dox \
-	bindings/java/doxygen/*.html \
-	bindings/java/nbproject/project.xml \
-	bindings/java/src/org/sleuthkit/datamodel/*.java \
-	bindings/java/src/org/sleuthkit/datamodel/*.html \
-	bindings/java/src/org/sleuthkit/datamodel/*.properties \
-	bindings/java/src/org/sleuthkit/datamodel/blackboardutils/*.java \
-	bindings/java/src/org/sleuthkit/datamodel/blackboardutils/attributes/*.java \
-	bindings/java/src/org/sleuthkit/datamodel/Examples/*.java \
-	bindings/java/src/*.html \
-	case-uco/java/*.xml \
-	case-uco/java/*.md \
-	case-uco/java/nbproject/*.xml \
-	case-uco/java/nbproject/*.properties \
-	case-uco/java/src/org/sleuthkit/caseuco/*.java \
-	case-uco/java/test/org/sleuthkit/caseuco/*.java \
 	docs/README.txt \
 	licenses/README.md \
 	licenses/GNUv2-COPYING \
@@ -63,13 +44,24 @@ EXTRA_DIST = \
 	licenses/cpl1.0.txt \
 	licenses/bsd.txt \
 	licenses/mit.txt \
-	m4/*.m4 \
-	packages/sleuthkit.spec \
-	win32/BUILDING.txt \
-	win32/*/*.vcxproj \
-	win32/tsk-win.sln \
-	win32/NugetPackages.props \
-	win32/docs/*
+	packages/sleuthkit.spec
+
+
+# Add the Java files to EXTRA_DIST.
+# Note: EXTRA_DIST does not work with wildcards, so we need to do this
+dist-hook:
+	@echo "Running dist-hook in $(shell pwd)"
+	@echo srcdir="$(srcdir)"
+	@echo distdir="$(distdir)"
+	@echo top_distdir="$(top_distdir)"
+	@ls -ld "$(distdir)"
+	@ls -l "$(distdir)"
+	@(mkdir -p "$(distdir)/bindings/java" && cd "$(srcdir)" && find bindings/java -type f | tar cf - -T - ) | (cd "$(distdir)" && tar xf -)
+	@(mkdir -p "$(distdir)/case-uco/java" && cd "$(srcdir)" && find case-uco/java -type f | tar cf - -T - ) | (cd "$(distdir)" && tar xf -)
+	@(mkdir -p "$(distdir)/win32"         && cd "$(srcdir)" && find win32         -type f | tar cf - -T - ) | (cd "$(distdir)" && tar xf -)
+	@(mkdir -p "$(distdir)/m4"            && cd "$(srcdir)" && find m4 -name 'ax_*' -or -name 'slg_*' -or -name 'tsk_*' | tar cf - -T -) | (cd "$(distdir)/m4" && tar xf -)
+	@echo "dist-hook finished"
+
 
 nobase_include_HEADERS = \
 	tsk/auto/guid.h \
@@ -399,10 +391,20 @@ tsk_libtsk_la_LIBADD = \
 tsk_libtsk_la_LDFLAGS = $(AM_LDFLAGS) -version-info 22:0:0 $(LIBTSK_LDFLAGS)
 
 EXTRA_DIST += \
-	tsk/tsk_tools_i.h \
 	tsk/docs/Doxyfile \
-	tsk/docs/*.dox \
-	tsk/docs/*.html \
+	tsk/docs/auto.dox \
+	tsk/docs/base.dox \
+	tsk/docs/basics.dox \
+	tsk/docs/cpp.dox \
+	tsk/docs/Doxyfile \
+	tsk/docs/footer.html \
+	tsk/docs/fs.dox \
+	tsk/docs/hashdb.dox \
+	tsk/docs/img.dox \
+	tsk/docs/main.dox \
+	tsk/docs/pool.dox \
+	tsk/docs/vs.dox \
+	tsk/tsk_tools_i.h \
 	tsk/tsk.pc.in
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -798,7 +800,7 @@ $(tsk_jar): tsk/libtsk.la bindings/java/jni/libtsk_jni.la tsk/.libs/@TSK_LIB@
 	@echo '=== BEGIN manually running make as fallback ==='
 	@$(MAKE) -j1 tsk/.libs/@TSK_LIB@
 	@echo '=== END manually running make as fallback ==='
-	cd bindings/java ; $(ANT) dist $(ant_args)
+	cd $(top_srcdir)/bindings/java ; $(ANT) dist $(ant_args)
 
 dnl Since libtool automatically creates libtsk.so or libtsk.dylib, we add this explicit rule:
 tsk/.libs/@TSK_LIB@: tsk/libtsk.la
@@ -821,7 +823,7 @@ bindings_java_jni_libtsk_jni_la_SOURCES = \
 
 $(tsk_caseuco_jar): $(tsk_jar)
 	@$(MAKE) -j1 tsk/.libs/@TSK_LIB@
-	cd case-uco/java ; $(ANT) $(ant_args)
+	cd $(top_srcdir)/case-uco/java ; $(ANT) $(ant_args)
 
 CLEANFILES += $(tsk_caseuco_jar)
 
