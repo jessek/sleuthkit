@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
-TD=test/tools/tool_differ.sh
-
 if [ ! "${srcdir+x}" ]; then
     echo srcdir is not set
     exit 77                     # autoconf 'SKIP'
 fi
 
+TD=${srcdir}/test/tools/tool_differ.sh
 
 if [ ! -e ${srcdir}/test/tools/vstools/mmls_output/2 ]; then
     echo ${srcdir}/test/tools/vstools/mmls_output/2 does not exit
