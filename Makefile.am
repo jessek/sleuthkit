@@ -718,7 +718,8 @@ if USE_WINE
 TESTS_ENVIRONMENT = WINE=wine
 endif
 
-LOG_COMPILER = scripts/test_runner.sh
+# Don't use the LOG_COMPILER. In its current form it broke `make distcheck`
+# LOG_COMPILER = scripts/test_runner.sh
 
 # TODO: nothing runs fs_attrlist_apis, fs_name_apis, fs_thread_test, read_apis
 check_PROGRAMS = \
