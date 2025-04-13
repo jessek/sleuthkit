@@ -1,3 +1,12 @@
+#
+# To debug:
+# make check TESTS_ENVIRONMENT='set -x'
+#
+# make check VERBOSE=1  - Show full test execution output
+# make V=1 check        - Show full build (compile/link) commands
+# make V=1 check VERBOSE=1 - Show both test and compilation details
+#
+
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CPPFLAGS = -I$(top_srcdir)/tsk $(SQLITE3_CPPFLAGS) $(CRYPTO_CPPFLAGS) $(AFFLIB_CPPFLAGS) $(AFF4_CPPFLAGS) $(EWF_CPPFLAGS) $(QCOW_CPPFLAGS) $(VHDI_CPPFLAGS) $(VMDK_CPPFLAGS) $(VSLVM_CPPFLAGS) $(BFIO_CPPFLAGS) $(ZLIB_CPPFLAGS)
@@ -651,73 +660,56 @@ test_data = \
 	test/data/README.md
 
 check_script_files = \
-	test/check_static.sh \
 	test/fiwalk/image_dd.xml \
 	test/fiwalk/README.md \
-	test/img_dump/img_differ.sh \
-	test/img_dump/test_imgs.sh \
-	test/img_dump/test_imgs_E01.sh \
-	test/legacy/run_fs_thread_test.sh \
 	test/README.md \
 	test/test_libraries.sh \
-	test/test_static_tools.sh \
-	test/tools/autotools \
-	test/tools/autotools/test_loaddb.sh \
 	test/tools/fstools/fls_output \
 	test/tools/fstools/fls_output/1 \
 	test/tools/fstools/fls_output/2 \
-	test/tools/fstools/test_fls.sh \
-	test/tools/tool_differ.sh \
 	test/tools/vstools/mmls_output \
 	test/tools/vstools/mmls_output/1 \
 	test/tools/vstools/mmls_output/2 \
-	test/tools/vstools/mmls_output/3 \
-	test/tools/vstools/test_mmls.sh \
-	test/tools/vstools/test_mmls_E01.sh
+	test/tools/vstools/mmls_output/3
 
 
-# tests are listed in check_SCRIPTS if they
-# - are only needed for testing
-# - must be installed in the build tree
-# - must be made executable
+# check_SCRIPTS are included in the DIST but not run
 check_SCRIPTS = \
+	scripts/test_runner.sh \
+	scripts/wine_wrapper.sh \
 	test/img_dump/img_differ.sh \
-	test/test_libraries.sh \
+	test/tools/tool_differ.sh
+
+# check_TESTS are included in the DIST and run as tests
+check_TESTS = \
+	test/check_static.sh \
 	test/img_dump/test_imgs.sh \
 	test/legacy/run_fs_thread_test.sh \
+	test/test_libraries.sh \
 	test/tools/autotools/test_loaddb.sh \
 	test/tools/fstools/test_fls.sh \
-	test/tools/tool_differ.sh \
 	test/tools/vstools/test_mmls.sh
-	test/tools/vstools/test_mmls.sh \
+
+if BUILD_STATIC
+check_TESTS += test/test_static_tools.sh
+endif
+
+if HAVE_E01
+check_TESTS += \
+	test/img_dump/test_imgs_E01.sh \
 	test/tools/vstools/test_mmls_E01.sh
+endif
 
 
-EXTRA_DIST +=  $(test_data) $(check_script_files)
+EXTRA_DIST +=  $(test_data) $(check_script_files) $(check_SCRIPTS) $(check_TESTS)
 
 #indent:
 #	pushd sorter ; perltidy -b sorter.base ; popd
 #	pushd timeline ; perltidy -b mactime.base ; popd
 
-TESTS =	\
+TESTS =	$(check_TESTS) \
 	test/catch_runner \
-	test/test_libraries.sh \
-	test/fiwalk/fiwalk_test \
-	test/img_dump/test_imgs.sh \
-	test/legacy/run_fs_thread_test.sh \
-	test/tools/autotools/test_loaddb.sh \
-	test/tools/fstools/test_fls.sh \
-	test/tools/vstools/test_mmls.sh
-
-if HAVE_E01
-TESTS += \
-	test/img_dump/test_imgs_E01.sh \
-	test/tools/vstools/test_mmls_E01.sh
-endif
-
-if BUILD_STATIC
-TESTS += test/test_static_tools.sh
-endif
+	test/fiwalk/fiwalk_test
 
 TEST_EXTENSIONS = .sh
 SH_LOG_COMPILER =
@@ -726,8 +718,7 @@ if USE_WINE
 TESTS_ENVIRONMENT = WINE=wine
 endif
 
-#SLG - removed LOG_COMPILER here. It's still used in
-#LOG_COMPILER = scripts/test_runner.sh
+LOG_COMPILER = scripts/test_runner.sh
 
 # TODO: nothing runs fs_attrlist_apis, fs_name_apis, fs_thread_test, read_apis
 check_PROGRAMS = \

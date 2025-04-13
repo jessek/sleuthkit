@@ -211,3 +211,4 @@ test/from_brian/
 apfs_pool.db
 test/catch_runner
 *.db
+sleuthkit-[4-5]*

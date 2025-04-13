@@ -7,8 +7,6 @@
 # $2 - expected output
 
 
-MYDIR=$( dirname $(realpath "$0") )
-
 if [[ -z "$2" ]]; then
     echo usage: img_differ.sh image image.json
     exit 1
@@ -18,7 +16,8 @@ if [ -n "$WINE" ]; then
   EXEEXT=.exe
 fi
 
-IMG_DUMP=$MYDIR/img_dump$EXEEXT
+# This program uses the img_dump executable which is assumped to be installed in:
+IMG_DUMP=test/img_dump/img_dump$EXEEXT
 
 if [ ! -e $IMG_DUMP ]; then
     echo $IMG_DUMP not found
