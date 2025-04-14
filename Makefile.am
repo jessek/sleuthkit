@@ -641,6 +641,7 @@ tools/sorter/sorter: $(top_srcdir)/tools/sorter/sorter.base Makefile
 
 clean-local:
 	rm -f thread-*log testdb.db base.log
+	find $(top_builddir) -type d -name '.deps' -exec rm -rf {} +
 
 test_data = \
 	test/data/a_file.0 \
@@ -870,9 +871,6 @@ else
 endif
 
 clean_java = clean-tsk_jar clean-tsk_caseuco_jar
-
-clean-local: $(clean_java)
-	find $(top_builddir) -type d -name '.deps' -exec rm -rf {} +
 
 .PHONY: clean-tsk_jar clean-tsk_caseuco_jar
 endif # End of X_JNI check
