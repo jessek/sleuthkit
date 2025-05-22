@@ -18,9 +18,9 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
   }
 
   #ifdef UNICODE
-    REQUIRE(tsk_img_type_toid(L_"raw") == TSK_IMG_TYPE_RAW);
-    REQUIRE(tsk_img_type_toid(L_"unknown") == TSK_IMG_TYPE_UNSUPP);
-    
+    REQUIRE(tsk_img_type_toid(L"raw") == TSK_IMG_TYPE_RAW);
+    REQUIRE(tsk_img_type_toid(L"unknown") == TSK_IMG_TYPE_UNSUPP);
+
   #else
   SECTION("NON UTF-8: raw returns raw type") {
     REQUIRE(tsk_img_type_toid("raw") == TSK_IMG_TYPE_RAW);
