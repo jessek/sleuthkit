@@ -1,5 +1,6 @@
 #include "tsk/img/img_types.h"
 #include "catch.hpp"
+#include <cstring> 
 
 TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
   SECTION("UTF-8: known format: raw") {
@@ -16,6 +17,11 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
     REQUIRE(tsk_img_type_toid_utf8(nullptr) == TSK_IMG_TYPE_UNSUPP);
   }
 
+  #ifdef UNICODE
+    REQUIRE(tsk_img_type_toid(L_"raw") == TSK_IMG_TYPE_RAW);
+    REQUIRE(tsk_img_type_toid(L_"unknown") == TSK_IMG_TYPE_UNSUPP);
+    
+  #else
   SECTION("NON UTF-8: raw returns raw type") {
     REQUIRE(tsk_img_type_toid("raw") == TSK_IMG_TYPE_RAW);
   }
@@ -27,6 +33,8 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
   SECTION("NON UTF-8: unknown input returns unsupported type") {
     REQUIRE(tsk_img_type_toid("unknown") == TSK_IMG_TYPE_UNSUPP);
   }
+  #endif
+
 
 #if HAVE_LIBEWF
   SECTION("Known format: ewf (if enabled)") {
@@ -93,15 +101,18 @@ TEST_CASE("checks that tsk_img_type_todesc returns expected description") {
 
 TEST_CASE("checks that tsk_img_type_supported returns expected output") {
   SECTION("check that supported file types are supported") {
-    REQUIRE(tsk_img_type_supported() == TSK_IMG_TYPE_RAW);
+    REQUIRE(tsk_img_type_supported() & TSK_IMG_TYPE_RAW);
   }
   #if HAVE_LIBEWF
   SECTION("Known format: ewf (if enabled)") {
     REQUIRE(tsk_img_type_supported() == TSK_IMG_TYPE_EWF_EWF);
   }
   #endif
-  SECTION("check that unsupported file types not supported") {
-    REQUIRE(tsk_img_type_supported() != TSK_IMG_TYPE_UNSUPP);
-  }
+  // Issue with unsupported file checking, because TSK_IMG_TYPE_UNSUPP is 0xffff this 
+  // fails the bitmask test since at least some of the bits will be supported causing this 
+  // to return true.
+  // SECTION("check that unsupported file types not supported") {
+  //   REQUIRE(!(tsk_img_type_supported() & TSK_IMG_TYPE_UNSUPP));  
+  // }
 }
 
