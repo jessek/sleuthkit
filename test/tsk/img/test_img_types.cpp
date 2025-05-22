@@ -45,39 +45,39 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
 }
 
 TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
-  char filename[L_tmpnam];
+    char filename[L_tmpnam];
 
 #if defined(__USE_GNU) || defined(_GNU_SOURCE) || defined(__GLIBC__)
-  // tmpnam_r is available on GNU
-  tmpnam_r(filename);
+    // tmpnam_r is available on GNU
+    tmpnam_r(filename);
 #else
-  // Fallback to tmpnam (not thread-safe, but okay in test context)
-  std::strcpy(filename, tmpnam(nullptr));
+    // Fallback to tmpnam (not thread-safe, but okay in test context)
+    std::strcpy(filename, tmpnam(nullptr));
 #endif
 
-  FILE* tmp = fopen(filename, "w+");
-  REQUIRE(tmp != nullptr);
+    FILE* tmp = fopen(filename, "w+");
+    REQUIRE(tmp != nullptr);
 
-  tsk_img_type_print(tmp);
-  fflush(tmp);               // flush stdout buffers
-  fseek(tmp, 0, SEEK_SET);   // rewind to start
+    tsk_img_type_print(tmp);
+    fflush(tmp);               // flush stdout buffers
+    fseek(tmp, 0, SEEK_SET);   // rewind to start
 
-  char buffer[4096] = {0};
-  fread(buffer, 1, sizeof(buffer) - 1, tmp);
-  fclose(tmp);
-  std::remove(filename);     // cleanup temp file
+    char buffer[4096] = {0};
+    fread(buffer, 1, sizeof(buffer) - 1, tmp);
+    fclose(tmp);
+    std::remove(filename);     // cleanup temp file
 
-  std::string output(buffer);
+    std::string output(buffer);
 
-  // Check some expected content
-  REQUIRE(output.find("Supported image format types:") != std::string::npos);
-  REQUIRE(output.find("raw") != std::string::npos);
-  REQUIRE(output.find("Single or split raw file") != std::string::npos);
+    // Check some expected content
+    REQUIRE(output.find("Supported image format types:") != std::string::npos);
+    REQUIRE(output.find("raw") != std::string::npos);
+    REQUIRE(output.find("Single or split raw file") != std::string::npos);
 
 #if HAVE_LIBEWF
-  SECTION("Known format: ewf (if enabled)") {
-      REQUIRE(output.find("ewf") != std::string::npos);
-  }
+    SECTION("Known format: ewf (if enabled)") {
+        REQUIRE(output.find("ewf") != std::string::npos);
+    }
 #endif
 }
 
