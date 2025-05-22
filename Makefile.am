@@ -318,6 +318,7 @@ tsk_img_libtskimg_la_SOURCES = \
 	tsk/img/img_open.cpp \
 	tsk/img/img_open.h \
 	tsk/img/img_types.c \
+	tsk/img/img_types.h \
 	tsk/img/img_writer.cpp \
 	tsk/img/img_writer.h \
 	tsk/img/legacy_cache.cpp \
@@ -752,6 +753,7 @@ test_catch_runner_SOURCES = \
 	test/tsk/img/test_aff4.cpp \
 	test/tsk/img/test_ewf.cpp \
 	test/tsk/img/test_img_io.cpp \
+	test/tsk/img/test_img_types.cpp \
 	test/tsk/img/test_img_open.cpp \
 	test/tsk/img/test_mult_files.cpp \
 	test/tsk/img/test_qcow.cpp \
