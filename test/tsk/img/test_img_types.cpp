@@ -44,33 +44,58 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
 #endif
 }
 
-/* TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
-  // Create a temporary in-memory file
-  FILE* tmp = tmpfile();
-  REQUIRE(tmp != nullptr);
-
-  // Call the function to print into the file
-  tsk_img_type_print(tmp);
-  fflush(tmp);               // flush stdout buffers
-  fseek(tmp, 0, SEEK_SET);   // rewind to start
-  // Read file contents into a buffer
-  char buffer[4096] = {0};
-  fread(buffer, 1, sizeof(buffer) - 1, tmp);
-  fclose(tmp);
-
-  // Convert to std::string for assertion
-  std::string output(buffer);
-
-  // Check some expected content
-  REQUIRE(output.find("Supported image format types:") != std::string::npos);
-  REQUIRE(output.find("raw") != std::string::npos);
-  REQUIRE(output.find("Single or split raw file") != std::string::npos);
-  #if HAVE_LIBEWF
-  SECTION("Known format: ewf (if enabled)") {
-    REQUIRE(output.find("ewf") != std::string::npos);
-  }
+TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
+  #if defined(CATCH_CONFIG_NEW_CAPTURE)
+      std::string stdout_output;
+      std::string stderr_output;
+  
+      {
+          // Redirect stdout and stderr
+          OutputRedirect capture(stdout_output, stderr_output);
+  
+          // Call the function (writes to stdout)
+          tsk_img_type_print(stdout);
+          fflush(stdout);  // Ensure everything is written
+      } // capture destructs here, output captured into strings
+  
+      // Assertions on the captured output
+      REQUIRE(stdout_output.find("Supported image format types:") != std::string::npos);
+      REQUIRE(stdout_output.find("raw") != std::string::npos);
+      REQUIRE(stdout_output.find("Single or split raw file") != std::string::npos);
+      #if HAVE_LIBEWF
+      SECTION("Known format: ewf (if enabled)") {
+          REQUIRE(stdout_output.find("ewf") != std::string::npos);
+      }
   #endif
-} */
+  #else 
+      // Create a temporary in-memory file
+      FILE* tmp = tmpfile();
+      REQUIRE(tmp != nullptr);
+    
+      // Call the function to print into the file
+      tsk_img_type_print(tmp);
+      fflush(tmp);               // flush stdout buffers
+      fseek(tmp, 0, SEEK_SET);   // rewind to start
+      // Read file contents into a buffer
+      char buffer[4096] = {0};
+      fread(buffer, 1, sizeof(buffer) - 1, tmp);
+      fclose(tmp);
+    
+      // Convert to std::string for assertion
+      std::string output(buffer);
+    
+      // Check some expected content
+      REQUIRE(output.find("Supported image format types:") != std::string::npos);
+      REQUIRE(output.find("raw") != std::string::npos);
+      REQUIRE(output.find("Single or split raw file") != std::string::npos);
+      #if HAVE_LIBEWF
+      SECTION("Known format: ewf (if enabled)") {
+        REQUIRE(output.find("ewf") != std::string::npos);
+      }
+      #endif
+  #endif
+  }
+  
 
 TEST_CASE("checks that tsk_img_type_toname returns expected name") {
   TSK_IMG_TYPE_ENUM raw = TSK_IMG_TYPE_RAW;
