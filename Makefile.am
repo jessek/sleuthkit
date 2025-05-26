@@ -749,6 +749,8 @@ test_catch_runner_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/vendors $(CATCH2_CPP
 test_catch_runner_LDADD = $(TSK_LIBS)
 test_catch_runner_SOURCES = \
 	test/tsk/img/test_img.h \
+	test/tools/tsk_tempfile.h \
+	test/tools/tsk_tempfile.cpp \
 	test/tsk/base/test_tsk_error.cpp \
 	test/tsk/img/test_aff4.cpp \
 	test/tsk/img/test_ewf.cpp \

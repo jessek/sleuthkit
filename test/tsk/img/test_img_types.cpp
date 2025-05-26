@@ -1,4 +1,5 @@
 #include "tsk/img/img_types.h"
+#include "test/tools/tsk_tempfile.h"
 #include "catch.hpp"
 #include <cstring> 
 
@@ -44,53 +45,33 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
 #endif
 }
 
-std::string capture_stdout_of(void (*fn)(FILE*)) {
-  // Create a pipe to capture stdout
-  int pipefd[2];
-  if (pipe(pipefd) == -1) {
-      perror("pipe");
-      return "";
-  }
-
-  // Save original stdout
-  int stdout_save = dup(fileno(stdout));
-  if (stdout_save == -1) {
-      perror("dup");
-      return "";
-  }
-
-  // Redirect stdout to pipe
-  if (dup2(pipefd[1], fileno(stdout)) == -1) {
-      perror("dup2");
-      return "";
-  }
-
-  close(pipefd[1]);  // close write end in parent
-
-  // Run the function (writing to stdout)
-  fn(stdout);
-  fflush(stdout);
-
-  // Restore original stdout
-  dup2(stdout_save, fileno(stdout));
-  close(stdout_save);
-
-  // Read captured output
-  char buffer[4096];
-  ssize_t count = read(pipefd[0], buffer, sizeof(buffer) - 1);
-  close(pipefd[0]);
-
-  if (count > 0) {
-      buffer[count] = '\0';
-      return std::string(buffer);
-  }
-
-  return "";
-}
-
 TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
-  std::string output = capture_stdout_of(tsk_img_type_print);
+  // Create a temporary file path
+  char* path = tsk_make_tempfile();
+  REQUIRE(path != nullptr);
 
+  // Open the file for writing
+  FILE* tmp = fopen(path, "w+");
+  REQUIRE(tmp != nullptr);
+
+  // Call the function to print into the file
+  tsk_img_type_print(tmp);
+  fflush(tmp);               // flush stdout buffers
+  fseek(tmp, 0, SEEK_SET);   // rewind to start
+
+  // Read file contents into a buffer
+  char buffer[4096] = {0};
+  fread(buffer, 1, sizeof(buffer) - 1, tmp);
+  fclose(tmp);
+
+  // Convert to std::string for assertion
+  std::string output(buffer);
+
+  // Clean up temp file
+  remove(path);
+  free(path);
+
+  // Check some expected content
   REQUIRE(output.find("Supported image format types:") != std::string::npos);
   REQUIRE(output.find("raw") != std::string::npos);
   REQUIRE(output.find("Single or split raw file") != std::string::npos);
@@ -102,7 +83,6 @@ TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
 #endif
 }
 
-  
 
 TEST_CASE("checks that tsk_img_type_toname returns expected name") {
   TSK_IMG_TYPE_ENUM raw = TSK_IMG_TYPE_RAW;
