@@ -1,4 +1,4 @@
-#include "tsk/img/img_types.h"
+#include "tsk/img/img_types_i.h"
 #include "test/tools/tsk_tempfile.h"
 #include "catch.hpp"
 #include <cstring> 
@@ -47,12 +47,7 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
 
 TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
   // Create a temporary file path
-  char* path = tsk_make_tempfile();
-  REQUIRE(path != nullptr);
-
-  // Open the file for writing
-  FILE* tmp = fopen(path, "w+");
-  REQUIRE(tmp != nullptr);
+  FILE* tmp = tsk_make_tempfile();
 
   // Call the function to print into the file
   tsk_img_type_print(tmp);
@@ -66,10 +61,6 @@ TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
 
   // Convert to std::string for assertion
   std::string output(buffer);
-
-  // Clean up temp file
-  remove(path);
-  free(path);
 
   // Check some expected content
   REQUIRE(output.find("Supported image format types:") != std::string::npos);
