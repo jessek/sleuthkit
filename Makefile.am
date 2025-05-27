@@ -318,7 +318,7 @@ tsk_img_libtskimg_la_SOURCES = \
 	tsk/img/img_open.cpp \
 	tsk/img/img_open.h \
 	tsk/img/img_types.c \
-	tsk/img/img_types.h \
+	tsk/img/img_types_i.h \
 	tsk/img/img_writer.cpp \
 	tsk/img/img_writer.h \
 	tsk/img/legacy_cache.cpp \
