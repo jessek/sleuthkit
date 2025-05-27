@@ -2,8 +2,6 @@
 Creates a temporary file path for use in testing. It is primarily used on MinGW systems, 
 where std::tmpfile() is unreliable 
 
-The returned path is dynamically allocated and must be freed by the caller.
-
 See test/tsk/img/test_img_types.cpp for example usage. 
 */
 
