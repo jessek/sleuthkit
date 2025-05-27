@@ -322,7 +322,7 @@ open_handles(const Options& opts, const TSK_TCHAR* const* argv, size_t argc) {
         img.reset(tsk_img_open(argc, argv, imgtype, ssize));
     }
     else {
-        // checks that we have enough arguments
+        // check that we have enough arguments
         if (argc == 1) {
             tsk_fprintf(stderr, "Missing image name or inode\n");
             usage();
