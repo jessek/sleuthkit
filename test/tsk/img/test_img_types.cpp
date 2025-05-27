@@ -45,6 +45,25 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
 #endif
 }
 
+TEST_CASE("check tsk_make_tempfile") {
+  FILE* file = tsk_make_tempfile();
+  REQUIRE(file != nullptr);
+
+  const char* test_str = "make tempfile\n";
+
+  size_t written = fwrite(test_str, 1, strlen(test_str), file);
+  REQUIRE(written == strlen(test_str));
+
+  fseek(file, 0, SEEK_SET);
+  char buffer[64] = {0};
+  size_t read = fread(buffer, 1, sizeof(buffer) - 1, file);
+  REQUIRE(read == strlen(test_str));
+  buffer[read] = '\0';
+
+  REQUIRE(std::string(buffer) == test_str);
+  fclose(file);
+} 
+
 TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
   // Create a temporary file path
   FILE* tmp = tsk_make_tempfile();
@@ -73,21 +92,6 @@ TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
   }
 #endif
 }
-
-// MWE test case that fails on MinGW systems because of std::tmpfile.
-/* TEST_CASE("tsk_img_type_print outputs expected content fail", "[img_types]") {
-  FILE* tmp = tmpfile();
-  tsk_img_type_print(tmp);
-  fflush(tmp);              
-  fseek(tmp, 0, SEEK_SET);   
-  char buffer[4096] = {0};
-  fread(buffer, 1, sizeof(buffer) - 1, tmp);
-  fclose(tmp);
-  std::string output(buffer);
-  REQUIRE(output.find("Supported image format types:") != std::string::npos);
-
-} */
-
 
 TEST_CASE("checks that tsk_img_type_toname returns expected name") {
   TSK_IMG_TYPE_ENUM raw = TSK_IMG_TYPE_RAW;
