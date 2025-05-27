@@ -83,6 +83,20 @@ TEST_CASE("tsk_img_type_print outputs expected content", "[img_types]") {
 #endif
 }
 
+// MWE test case that fails on MinGW systems because of std::tmpfile.
+/* TEST_CASE("tsk_img_type_print outputs expected content fail", "[img_types]") {
+  FILE* tmp = tmpfile();
+  tsk_img_type_print(tmp);
+  fflush(tmp);              
+  fseek(tmp, 0, SEEK_SET);   
+  char buffer[4096] = {0};
+  fread(buffer, 1, sizeof(buffer) - 1, tmp);
+  fclose(tmp);
+  std::string output(buffer);
+  REQUIRE(output.find("Supported image format types:") != std::string::npos);
+
+} */
+
 
 TEST_CASE("checks that tsk_img_type_toname returns expected name") {
   TSK_IMG_TYPE_ENUM raw = TSK_IMG_TYPE_RAW;
