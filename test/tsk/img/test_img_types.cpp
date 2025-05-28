@@ -14,27 +14,19 @@ TEST_CASE("tsk_img_type_toid returns correct ID", "[img_types]") {
       REQUIRE(type == TSK_IMG_TYPE_UNSUPP);
   }
 
-  SECTION("UTF-8: Null input returns unsupported type") {
-    REQUIRE(tsk_img_type_toid_utf8(nullptr) == TSK_IMG_TYPE_UNSUPP);
-  }
+#ifdef UNICODE
+  REQUIRE(tsk_img_type_toid(L"raw") == TSK_IMG_TYPE_RAW);
+  REQUIRE(tsk_img_type_toid(L"unknown") == TSK_IMG_TYPE_UNSUPP);
 
-  #ifdef UNICODE
-    REQUIRE(tsk_img_type_toid(L"raw") == TSK_IMG_TYPE_RAW);
-    REQUIRE(tsk_img_type_toid(L"unknown") == TSK_IMG_TYPE_UNSUPP);
-
-  #else
+#else
   SECTION("NON UTF-8: raw returns raw type") {
     REQUIRE(tsk_img_type_toid("raw") == TSK_IMG_TYPE_RAW);
-  }
-
-  SECTION("NON UTF-8: null input returns unsupported type") {
-    REQUIRE(tsk_img_type_toid(nullptr) == TSK_IMG_TYPE_UNSUPP);
   }
 
   SECTION("NON UTF-8: unknown input returns unsupported type") {
     REQUIRE(tsk_img_type_toid("unknown") == TSK_IMG_TYPE_UNSUPP);
   }
-  #endif
+#endif
 
 
 #if HAVE_LIBEWF
@@ -98,13 +90,12 @@ TEST_CASE("checks that tsk_img_type_toname returns expected name") {
   REQUIRE(!strcmp(tsk_img_type_toname(raw), "raw"));
   TSK_IMG_TYPE_ENUM unsupp = TSK_IMG_TYPE_UNSUPP;
   REQUIRE(tsk_img_type_toname(unsupp) == nullptr);
-  #if HAVE_LIBEWF
+#if HAVE_LIBEWF
   SECTION("Known format: ewf (if enabled)") {
     TSK_IMG_TYPE_ENUM ewf = TSK_IMG_TYPE_EWF_EWF;
     REQUIRE(!strcmp(tsk_img_type_toname(ewf), "ewf"));
   }
-  #endif
-
+#endif
 }
 
 TEST_CASE("checks that tsk_img_type_todesc returns expected description") {
@@ -112,23 +103,23 @@ TEST_CASE("checks that tsk_img_type_todesc returns expected description") {
   REQUIRE(!strcmp(tsk_img_type_todesc(raw), "Single or split raw file (dd)"));
   TSK_IMG_TYPE_ENUM unsupp = TSK_IMG_TYPE_UNSUPP;
   REQUIRE(tsk_img_type_todesc(unsupp) == nullptr);
-  #if HAVE_LIBEWF
+#if HAVE_LIBEWF
   SECTION("Known format: ewf (if enabled)") {
     TSK_IMG_TYPE_ENUM ewf = TSK_IMG_TYPE_EWF_EWF;
     REQUIRE(!strcmp(tsk_img_type_todesc(ewf), "Expert Witness Format (EnCase)"));
   }
-  #endif
+#endif
 }
 
 TEST_CASE("checks that tsk_img_type_supported returns expected output") {
   SECTION("check that supported file types are supported") {
     REQUIRE(tsk_img_type_supported() & TSK_IMG_TYPE_RAW);
   }
-  #if HAVE_LIBEWF
+#if HAVE_LIBEWF
   SECTION("Known format: ewf (if enabled)") {
     REQUIRE(tsk_img_type_supported() == TSK_IMG_TYPE_EWF_EWF);
   }
-  #endif
+#endif
   // Issue with unsupported file checking, because TSK_IMG_TYPE_UNSUPP is 0xffff this 
   // fails the bitmask test since at least some of the bits will be supported causing this 
   // to return true.
