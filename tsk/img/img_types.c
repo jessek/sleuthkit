@@ -14,6 +14,7 @@
  * Contains basic functions to parse and print the names of the supported disk image types.
  */
 #include "tsk_img_i.h"
+#include <assert.h>
 
 /** \internal
   * used to parse and print supported types
@@ -71,9 +72,7 @@ static IMG_TYPES img_open_table[] = {
 TSK_IMG_TYPE_ENUM
 tsk_img_type_toid_utf8(const char *str)
 {
-    if (str == NULL) {
-        return TSK_IMG_TYPE_UNSUPP;
-    }
+    assert(str != NULL);
 
     IMG_TYPES *sp;
 
@@ -98,9 +97,7 @@ tsk_img_type_toid_utf8(const char *str)
 TSK_IMG_TYPE_ENUM
 tsk_img_type_toid(const TSK_TCHAR * str)
 {
-    if (str == NULL) {
-        return TSK_IMG_TYPE_UNSUPP;
-    }
+    assert(str != NULL);
     
     char tmp[16];
     int i;
